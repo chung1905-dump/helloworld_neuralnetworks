@@ -1,0 +1,11 @@
+{
+  "name": "one",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/index.js"
+  },
+  "dependencies": {
+    "socket.io": "^2.0.3"
+  }
+}
