@@ -1,6 +1,7 @@
 var fs = require('fs');
 
 var controller = {
+    
     htmlPath: '',
     resObject: {},
 
@@ -9,15 +10,16 @@ var controller = {
         this.resObject = res;
     },
 
-    execute: function (req, res) {
+    execute: function () {
     },
 
     render: function () {
+        var self = this;
         fs.readFile(this.htmlPath, function (err, data) {
             if (err !== null) {
-                this.writeErr(err, this.res);
+                self.writeErr(err, self.resObject);
             } else {
-                this.writeData(data, this.res);
+                self.writeData(data, self.resObject);
             }
         });
     },
