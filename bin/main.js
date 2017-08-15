@@ -15,32 +15,42 @@ var writeData = function (data, res) {
     res.end();
 };
 
-var html = function (req, res) {
+var controller = function (req, res) {
+    console.log(req);
+    var filePath = '../controller/index.js';
+    if (req[0] !== '') {
+        if (req.length === 1) {
+            filePath = '../controller/' + req[0] + '/index.js';
+        } else {
+            filePath = '../controller/' + req[0] + '/' + req[1] + '.js';
+        }
+    }
+    try {
+        return require(filePath);
+    } catch (e) {
+        writeErr({}, res);
+    }
+};
+
+var html = function (req) {
     console.log(req);
     var filePath = 'view/index.html';
-    if (req[0] === '') {
-        fs.readFile(filePath, function (err, data) {
-            writeData(data, res);
-        });
-    } else {
+    if (req[0] !== '') {
         if (req.length === 1) {
             filePath = 'view/' + req[0] + '/index.html';
         } else {
             filePath = 'view/' + req[0] + '/' + req[1] + '.html';
         }
-        fs.readFile(filePath, function (err, data) {
-            if (err !== null) {
-                writeErr(err, res);
-            } else {
-                writeData(data, res);
-            }
-        });
     }
+    return filePath;
 };
 
 var running = function (req, res) {
     var u = req.url.match('^[^?]*')[0].split('/').slice(1);
-    html(u, res);
+    var c = controller(u, res);
+    c.init(u, res);
+    c.execute(u, res);
+    c.render();
 };
 
 var server = require('http').createServer(running);
